@@ -1,6 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const dfaRoutes = require('./routes/dfaRoutes');
 
 const app = express();
@@ -12,15 +13,8 @@ app.use(express.json());
 
 app.use('/api', dfaRoutes);
 
-
-app.get('/', (req, res) => {
-    res.json({
-        message: 'DFA Minimization API is running',
-        endpoints: {
-            minimize: 'POST /api/minimize',
-        },
-    });
-});
+// Serve built frontend static files in production
+app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 
 app.use((err, req, res, next) => {
@@ -31,7 +25,13 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Catch-all: serve index.html for client-side routing (React Router)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
+});
+
 
 app.listen(PORT, () => {
     console.log(`✓ DFA Minimization API running on http://localhost:${PORT}`);
 });
+
