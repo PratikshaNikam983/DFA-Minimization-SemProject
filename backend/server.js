@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 });
 
 // Catch-all: serve index.html for client-side routing (React Router)
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
